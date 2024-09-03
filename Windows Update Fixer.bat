@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.1
+echo Version: 1.0.2
 echo Developer: @YonatanReuvenIsraeli
 echo Website: https://www.yonatanreuvenisraeli.dev
 echo License: GNU General Public License v3.0
@@ -106,7 +106,7 @@ echo.
 echo Reseting Winsock catalog.
 netsh winsock reset > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
-echo Winsock catalog reset.
+echo Restart needed to finish Winsock catalog reset.
 goto "Windows"
 
 :"Windows"
