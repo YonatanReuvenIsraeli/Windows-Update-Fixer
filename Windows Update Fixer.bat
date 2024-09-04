@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.2
+echo Version: 1.0.3
 echo Developer: @YonatanReuvenIsraeli
 echo Website: https://www.yonatanreuvenisraeli.dev
 echo License: GNU General Public License v3.0
@@ -154,6 +154,7 @@ pause > nul 2>&1
 goto "Start"
 
 :"Restart"
+endlocal
 echo.
 echo Restart needed. Press any key to restart this PC.
 pause > nul 2>&1
