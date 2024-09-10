@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.4
+echo Version: 1.0.5
 echo Developer: @YonatanReuvenIsraeli
 echo Website: https://www.yonatanreuvenisraeli.dev
 echo License: GNU General Public License v3.0
@@ -64,7 +64,7 @@ goto "Reregister"
 
 :"Reregister"
 echo.
-echo Reregistering BITS files and the Windows Update files.
+echo Reregistering BITS files and Windows Update files.
 regsvr32 /s "%windir%\system32\atl.dll" > nul 2>&1
 regsvr32 /s "%windir%\system32\urlmon.dll" > nul 2>&1
 regsvr32 /s "%windir%\system32\mshtml.dll" > nul 2>&1
