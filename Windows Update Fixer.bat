@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.5
+echo Version: 1.0.6
 echo Developer: @YonatanReuvenIsraeli
 echo Website: https://www.yonatanreuvenisraeli.dev
 echo License: GNU General Public License v3.0
@@ -30,10 +30,10 @@ echo Press any key to fix Windows Update!
 pause > nul 2>&1
 echo.
 echo Stoping Windows Update services.
-net stop bits > nul 2>&1
-net stop wuauserv > nul 2>&1
-net stop cryptsvc > nul 2>&1
-net stop appidsvc > nul 2>&1
+net stop bits /y > nul 2>&1
+net stop wuauserv /y > nul 2>&1
+net stop cryptsvc /y > nul 2>&1
+net stop appidsvc /y > nul 2>&1
 echo Windows Update services stoped.
 echo.
 echo Deleting Windows Update files.
