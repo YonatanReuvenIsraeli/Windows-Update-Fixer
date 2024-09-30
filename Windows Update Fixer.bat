@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.6
+echo Version: 1.0.7
 echo Developer: @YonatanReuvenIsraeli
 echo Website: https://www.yonatanreuvenisraeli.dev
 echo License: GNU General Public License v3.0
@@ -115,7 +115,7 @@ echo [1] Windows XP or Windows Server 2003.
 echo [2] Windows Vista or Windows Server 2008.
 echo [3] None of the above.
 set Windows=
-set /p Windows="Which of the following Windows versions is this PC (1-3) "
+set /p Windows="Which of the following Windows versions is this PC? (1-3) "
 if /i "%Windows%"=="1" goto "1"
 if /i "%Windows%"=="2" goto "2"
 if /i "%Windows%"=="3" goto "2"
