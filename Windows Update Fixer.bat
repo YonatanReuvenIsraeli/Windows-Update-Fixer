@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.10
+echo Version: 1.0.11
 echo Developer: @YonatanReuvenIsraeli
 echo Website: https://www.yonatanreuvenisraeli.dev
 echo License: GNU General Public License v3.0
@@ -116,11 +116,38 @@ echo [2] Windows Vista or Windows Server 2008.
 echo [3] None of the above.
 set Windows=
 set /p Windows="Which of the following Windows versions is this PC? (1-3) "
-if /i "%Windows%"=="1" goto "1"
-if /i "%Windows%"=="2" goto "2"
-if /i "%Windows%"=="3" goto "2"
+if /i "%Windows%"=="1" goto "Sure1"
+if /i "%Windows%"=="2" goto "Sure2"
+if /i "%Windows%"=="3" goto "Sure3"
 echo Invalid syntax!
 goto "Windows"
+
+:"Sure1"
+echo.
+set Sure=
+set /p Sure="Are you sure this PC is Windows XP or Windows Server 2003? (Yes/No) "
+if /i "%Sure%"=="Yes" goto "1"
+if /i "%Sure%"=="No" goto "Windows"
+echo Invalid syntax!
+goto "Sure1"
+
+:"Sure2"
+echo.
+set Sure=
+set /p Sure="Are you sure this PC is Windows Vista or Windows Server 2008? (Yes/No) "
+if /i "%Sure%"=="Yes" goto "2"
+if /i "%Sure%"=="No" goto "Windows"
+echo Invalid syntax!
+goto "Sure2"
+
+:"Sure3"
+echo.
+set Sure=
+set /p Sure="Are you sure this PC is none of the above? (Yes/No) "
+if /i "%Sure%"=="Yes" goto "2"
+if /i "%Sure%"=="No" goto "Windows"
+echo Invalid syntax!
+goto "Sure3"
 
 :"1"
 echo.
