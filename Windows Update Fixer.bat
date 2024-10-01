@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.9
+echo Version: 1.0.10
 echo Developer: @YonatanReuvenIsraeli
 echo Website: https://www.yonatanreuvenisraeli.dev
 echo License: GNU General Public License v3.0
@@ -37,7 +37,7 @@ net stop appidsvc /y > nul 2>&1
 echo Windows Update services stoped.
 echo.
 echo Deleting Windows Update files.
-del "%ALLUSERSPROFILE%\Microsoft\Network\Downloader\*.*" /f /q > nul 2>&1
+rd "%ALLUSERSPROFILE%\Microsoft\Network\Downloader" /s /q > nul 2>&1
 rd "%SystemRoot%\SoftwareDistribution" /s /q > nul 2>&1
 rd "%SystemRoot%\System32\catroot2" /s /q > nul 2>&1
 echo Windows Update files deleted.
