@@ -1,4 +1,4 @@
-# Windows Update Fixer v1.0.12
+# Windows Update Fixer v1.0.13
 Fixes Windows Update issues.
 ## Notes:
 This batch file only fixes Windows Update. Sometimes Windows corruption and/or Windows network issues causes Windows Update to not work.
