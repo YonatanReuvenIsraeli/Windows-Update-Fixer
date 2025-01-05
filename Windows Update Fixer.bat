@@ -2,14 +2,14 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.16
+echo Version: 1.0.17
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
 echo Sponsor: https://github.com/sponsors/YonatanReuvenIsraeli 
-net session > nul 2>&1
+"%windir%\System32\net.exe" session > nul 2>&1
 if not "%errorlevel%"=="0" goto "NotAdministrator"
-net user > nul 2>&1
+"%windir%\System32\net.exe" user > nul 2>&1
 if not "%errorlevel%"=="0" goto "InWindowsRecoveryEnvironment"
 goto "Start"
 
@@ -31,10 +31,10 @@ echo Press any key to fix Windows Update!
 pause > nul 2>&1
 echo.
 echo Stoping Windows Update services.
-net stop bits /y > nul 2>&1
-net stop wuauserv /y > nul 2>&1
-net stop cryptsvc /y > nul 2>&1
-net stop appidsvc /y > nul 2>&1
+"%windir%\System32\net.exe" stop bits /y > nul 2>&1
+"%windir%\System32\net.exe" stop wuauserv /y > nul 2>&1
+"%windir%\System32\net.exe" stop cryptsvc /y > nul 2>&1
+"%windir%\System32\net.exe" stop appidsvc /y > nul 2>&1
 echo Windows Update services stoped.
 echo.
 echo Deleting Windows Update files.
@@ -56,9 +56,9 @@ goto "sc"
 :"Reset"
 echo.
 echo Reseting the BITS service and the Windows Update service to the default security descriptor.
-sc.exe sdset bits D:(A;CI;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU) > nul 2>&1
+"%windir%\System32\sc.exe" sdset bits D:(A;CI;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU) > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
-sc.exe sdset wuauserv D:(A;;CCLCSWRPLORC;;;AU)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY) > nul 2>&1
+"%windir%\System32\sc.exe" sdset wuauserv D:(A;;CCLCSWRPLORC;;;AU)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY) > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
 echo BITS service and the Windows Update service reset to the default security descriptor.
 goto "Reregister"
@@ -66,46 +66,46 @@ goto "Reregister"
 :"Reregister"
 echo.
 echo Reregistering BITS files and Windows Update files.
-regsvr32 /s "%windir%\system32\atl.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\urlmon.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\mshtml.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\shdocvw.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\browseui.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\jscript.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\vbscript.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\scrrun.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\msxml.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\msxml3.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\msxml6.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\actxprxy.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\softpub.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wintrust.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\dssenh.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\rsaenh.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\gpkcsp.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\sccbase.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\slbcsp.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\cryptdlg.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\oleaut32.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\ole32.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\shell32.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\initpki.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wuapi.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wuaueng.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wuaueng1.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wucltui.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wups.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wups2.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wuweb.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\qmgr.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\qmgrprxy.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wucltux.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\muweb.dll" > nul 2>&1
-regsvr32 /s "%windir%\system32\wuwebv.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\atl.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\urlmon.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\mshtml.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\shdocvw.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\browseui.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\jscript.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\vbscript.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\scrrun.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\msxml.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\msxml3.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\msxml6.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\actxprxy.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\softpub.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wintrust.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\dssenh.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\rsaenh.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\gpkcsp.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\sccbase.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\slbcsp.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\cryptdlg.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\oleaut32.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\ole32.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\shell32.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\initpki.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wuapi.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wuaueng.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wuaueng1.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wucltui.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wups.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wups2.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wuweb.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\qmgr.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\qmgrprxy.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wucltux.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\muweb.dll" > nul 2>&1
+"%windir%\System32\regsvr32.exe" /s "%windir%\System32\wuwebv.dll" > nul 2>&1
 echo BITS files and Windows Update files reregistered.
 echo.
 echo Reseting Winsock catalog.
-netsh winsock reset > nul 2>&1
+"%windir%\System32\netsh.exe" winsock reset > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
 echo Restart needed to finish Winsock catalog reset.
 goto "Windows"
@@ -154,7 +154,7 @@ goto "Sure3"
 :"1"
 echo.
 echo Setting the proxy settings.
-proxycfg.exe -d
+"%windir%\System32\proxycfg.exe" -d
 if not "%errorlevel%"=="0" goto "Error"
 echo Proxy settings set.
 goto "2"
@@ -162,10 +162,10 @@ goto "2"
 :"2"
 echo.
 echo Starting Windows Update services.
-net start bits > nul 2>&1
-net start wuauserv > nul 2>&1
-net start cryptsvc > nul 2>&1
-net start appidsvc > nul 2>&1
+"%windir%\System32\net.exe" start bits > nul 2>&1
+"%windir%\System32\net.exe" start wuauserv > nul 2>&1
+"%windir%\System32\net.exe" start cryptsvc > nul 2>&1
+"%windir%\System32\net.exe" start appidsvc > nul 2>&1
 echo Windows Update services started.
 if /i "%Windows%"=="2" goto "BITS"
 goto "Restart"
@@ -173,15 +173,15 @@ goto "Restart"
 :"BITS"
 echo.
 echo Clearing the BITS queue.
-bitsadmin /reset /allusers
+"%windir%\System32\bitsadmin.exe" /reset /allusers
 echo BITS queue cleared.
 goto "Restart"
 
 :"Error"
-net start bits > nul 2>&1
-net start wuauserv > nul 2>&1
-net start cryptsvc > nul 2>&1
-net start appidsvc > nul 2>&1
+"%windir%\System32\net.exe" start bits > nul 2>&1
+"%windir%\System32\net.exe" start wuauserv > nul 2>&1
+"%windir%\System32\net.exe" start cryptsvc > nul 2>&1
+"%windir%\System32\net.exe" start appidsvc > nul 2>&1
 echo There has been an error! Press any key to try again.
 pause > nul 2>&1
 goto "Start"
@@ -191,4 +191,4 @@ endlocal
 echo.
 echo Restart needed. Press any key to restart this PC.
 pause > nul 2>&1
-shutdown /r /t 00
+"%windir%\System32\shutdown.exe" /r /t 00
