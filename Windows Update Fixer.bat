@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.18
+echo Version: 1.0.19
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -10,7 +10,7 @@ echo Sponsor: https://github.com/sponsors/YonatanReuvenIsraeli
 "%windir%\System32\net.exe" session > nul 2>&1
 if not "%errorlevel%"=="0" goto "NotAdministrator"
 "%windir%\System32\net.exe" user > nul 2>&1
-if not "%errorlevel%"=="0" goto "InWindowsRecoveryEnvironment"
+if not "%errorlevel%"=="0" goto "InWindowsPreinstallationEnvironmentWindowsRecoveryEnvironment"
 goto "Start"
 
 :"NotAdministrator"
@@ -19,9 +19,9 @@ echo Please run this batch file as an administrator. Press any key to close this
 pause > nul 2>&1
 goto "Close"
 
-:"InWindowsRecoveryEnvironment"
+:"InWindowsPreinstallationEnvironmentWindowsRecoveryEnvironment"
 echo.
-echo Please run this batch file from within Windows. Press any key to close this batch file.
+echo You are in Windows Preinstallation Environment or Windows Recovery Environment! You must run this batch file in Windows. Press any key to close this batch file.
 pause > nul 2>&1
 goto "Close"
 
