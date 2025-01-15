@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.0.19
+echo Version: 1.1.0
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -11,7 +11,7 @@ echo Sponsor: https://github.com/sponsors/YonatanReuvenIsraeli
 if not "%errorlevel%"=="0" goto "NotAdministrator"
 "%windir%\System32\net.exe" user > nul 2>&1
 if not "%errorlevel%"=="0" goto "InWindowsPreinstallationEnvironmentWindowsRecoveryEnvironment"
-goto "Start"
+goto "sc"
 
 :"NotAdministrator"
 echo.
@@ -25,10 +25,66 @@ echo You are in Windows Preinstallation Environment or Windows Recovery Environm
 pause > nul 2>&1
 goto "Close"
 
-:"Start"
+:"sc"
 echo.
-echo Press any key to fix Windows Update!
-pause > nul 2>&1
+set sc=
+set /p sc="Reseting the BITS service and the Windows Update service to the default security descriptor will overwrite your existing security ACLs on the BITS and Windows Update service and set them to default. Do you want to do this? (Yes/No) "
+if /i "%sc%"=="Yes" goto "Suresc"
+if /i "%sc%"=="No" goto "Windows"
+echo Invalid syntax!
+goto "sc"
+
+:"Suresc"
+echo.
+set Suresc=
+set /p Suresc="Are you sure you want to reset the BITS service and the Windows Update service to the default security descriptor? (Yes/No)
+if /i "%Suresc%"=="Yes" goto "Windows"
+if /i "%Suresc%"=="No" goto "sc"
+echo Invalid syntax!
+goto "Suresc"
+
+:"Windows"
+echo.
+echo [1] Windows XP or Windows Server 2003.
+echo [2] Windows Vista or Windows Server 2008.
+echo [3] None of the above.
+echo.
+set Windows=
+set /p Windows="Which of the following Windows versions is this PC? (1-3) "
+if /i "%Windows%"=="1" goto "Sure1"
+if /i "%Windows%"=="2" goto "Sure2"
+if /i "%Windows%"=="3" goto "Sure3"
+echo Invalid syntax!
+goto "Windows"
+
+:"Sure1"
+echo.
+set Sure=
+set /p Sure="Are you sure this PC is Windows XP or Windows Server 2003? (Yes/No) "
+if /i "%Sure%"=="Yes" goto "StopUpdateServices"
+if /i "%Sure%"=="No" goto "Windows"
+echo Invalid syntax!
+goto "Sure1"
+
+:"Sure2"
+echo.
+set Sure=
+set /p Sure="Are you sure this PC is Windows Vista or Windows Server 2008? (Yes/No) "
+if /i "%Sure%"=="Yes" goto "StopUpdateServices"
+if /i "%Sure%"=="No" goto "Windows"
+echo Invalid syntax!
+goto "Sure2"
+
+:"Sure3"
+echo.
+set Sure=
+set /p Sure="Are you sure this PC is none of the above? (Yes/No) "
+if /i "%Sure%"=="Yes" goto "StopUpdateServices"
+if /i "%Sure%"=="No" goto "Windows"
+echo Invalid syntax!
+goto "Sure3"
+
+:"StopUpdateServices"
 echo.
 echo Stoping Windows Update services.
 "%windir%\System32\net.exe" stop bits /y > nul 2>&1
@@ -42,16 +98,8 @@ rd "%ALLUSERSPROFILE%\Microsoft\Network\Downloader" /s /q > nul 2>&1
 rd "%SystemRoot%\SoftwareDistribution" /s /q > nul 2>&1
 rd "%SystemRoot%\System32\catroot2" /s /q > nul 2>&1
 echo Windows Update files deleted.
-goto "sc"
-
-:"sc"
-echo.
-set sc=
-set /p sc="Reseting the BITS service and the Windows Update service to the default security descriptor will overwrite your existing security ACLs on the BITS and Windows Update service and set them to default. Do you want to do this? (Yes/No) "
 if /i "%sc%"=="Yes" goto "Reset"
 if /i "%sc%"=="No" goto "Reregister"
-echo Invalid syntax!
-goto "sc"
 
 :"Reset"
 echo.
@@ -108,58 +156,19 @@ echo Reseting Winsock catalog.
 "%windir%\System32\netsh.exe" winsock reset > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
 echo Restart needed to finish Winsock catalog reset.
-goto "Windows"
+if /i "%Windows%"=="1" goto "Proxy"
+if /i "%Windows%"=="2" goto "StartUpdateServices"
+if /i "%Windows%"=="3" goto "StartUpdateServices"
 
-:"Windows"
-echo.
-echo [1] Windows XP or Windows Server 2003.
-echo [2] Windows Vista or Windows Server 2008.
-echo [3] None of the above.
-echo.
-set Windows=
-set /p Windows="Which of the following Windows versions is this PC? (1-3) "
-if /i "%Windows%"=="1" goto "Sure1"
-if /i "%Windows%"=="2" goto "Sure2"
-if /i "%Windows%"=="3" goto "Sure3"
-echo Invalid syntax!
-goto "Windows"
-
-:"Sure1"
-echo.
-set Sure=
-set /p Sure="Are you sure this PC is Windows XP or Windows Server 2003? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "1"
-if /i "%Sure%"=="No" goto "Windows"
-echo Invalid syntax!
-goto "Sure1"
-
-:"Sure2"
-echo.
-set Sure=
-set /p Sure="Are you sure this PC is Windows Vista or Windows Server 2008? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "2"
-if /i "%Sure%"=="No" goto "Windows"
-echo Invalid syntax!
-goto "Sure2"
-
-:"Sure3"
-echo.
-set Sure=
-set /p Sure="Are you sure this PC is none of the above? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "2"
-if /i "%Sure%"=="No" goto "Windows"
-echo Invalid syntax!
-goto "Sure3"
-
-:"1"
+:"Proxy"
 echo.
 echo Setting the proxy settings.
 "%windir%\System32\proxycfg.exe" -d
 if not "%errorlevel%"=="0" goto "Error"
 echo Proxy settings set.
-goto "2"
+goto "StartUpdateServices"
 
-:"2"
+:"StartUpdateServices"
 echo.
 echo Starting Windows Update services.
 "%windir%\System32\net.exe" start bits > nul 2>&1
@@ -184,11 +193,11 @@ goto "Restart"
 "%windir%\System32\net.exe" start appidsvc > nul 2>&1
 echo There has been an error! Press any key to try again.
 pause > nul 2>&1
-goto "Start"
+goto "sc"
 
 :"Restart"
 endlocal
 echo.
-echo Restart needed. Press any key to restart this PC.
+echo Restart needed to finish fixing Windows Update. Press any key to restart this PC.
 pause > nul 2>&1
 "%windir%\System32\shutdown.exe" /r /t 00
