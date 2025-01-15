@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.1.0
+echo Version: 1.1.1
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -37,7 +37,7 @@ goto "sc"
 :"Suresc"
 echo.
 set Suresc=
-set /p Suresc="Are you sure you want to reset the BITS service and the Windows Update service to the default security descriptor? (Yes/No)
+set /p Suresc="Are you sure you want to reset the BITS service and the Windows Update service to the default security descriptor? (Yes/No) "
 if /i "%Suresc%"=="Yes" goto "Windows"
 if /i "%Suresc%"=="No" goto "sc"
 echo Invalid syntax!
