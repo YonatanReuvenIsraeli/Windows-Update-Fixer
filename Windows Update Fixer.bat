@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.1.1
+echo Version: 1.1.2
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -61,7 +61,7 @@ goto "Windows"
 echo.
 set Sure=
 set /p Sure="Are you sure this PC is Windows XP or Windows Server 2003? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "StopUpdateServices"
+if /i "%Sure%"=="Yes" goto "StopWindowsUpdateServices"
 if /i "%Sure%"=="No" goto "Windows"
 echo Invalid syntax!
 goto "Sure1"
@@ -70,7 +70,7 @@ goto "Sure1"
 echo.
 set Sure=
 set /p Sure="Are you sure this PC is Windows Vista or Windows Server 2008? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "StopUpdateServices"
+if /i "%Sure%"=="Yes" goto "StopWindowsUpdateServices"
 if /i "%Sure%"=="No" goto "Windows"
 echo Invalid syntax!
 goto "Sure2"
@@ -79,12 +79,12 @@ goto "Sure2"
 echo.
 set Sure=
 set /p Sure="Are you sure this PC is none of the above? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "StopUpdateServices"
+if /i "%Sure%"=="Yes" goto "StopWindowsUpdateServices"
 if /i "%Sure%"=="No" goto "Windows"
 echo Invalid syntax!
 goto "Sure3"
 
-:"StopUpdateServices"
+:"StopWindowsUpdateServices"
 echo.
 echo Stoping Windows Update services.
 "%windir%\System32\net.exe" stop bits /y > nul 2>&1
@@ -157,8 +157,8 @@ echo Reseting Winsock catalog.
 if not "%errorlevel%"=="0" goto "Error"
 echo Restart needed to finish Winsock catalog reset.
 if /i "%Windows%"=="1" goto "Proxy"
-if /i "%Windows%"=="2" goto "StartUpdateServices"
-if /i "%Windows%"=="3" goto "StartUpdateServices"
+if /i "%Windows%"=="2" goto "StartWindowsUpdateServices"
+if /i "%Windows%"=="3" goto "StartWindowsUpdateServices"
 
 :"Proxy"
 echo.
@@ -166,9 +166,9 @@ echo Setting the proxy settings.
 "%windir%\System32\proxycfg.exe" -d
 if not "%errorlevel%"=="0" goto "Error"
 echo Proxy settings set.
-goto "StartUpdateServices"
+goto "StartWindowsUpdateServices"
 
-:"StartUpdateServices"
+:"StartWindowsUpdateServices"
 echo.
 echo Starting Windows Update services.
 "%windir%\System32\net.exe" start bits > nul 2>&1
