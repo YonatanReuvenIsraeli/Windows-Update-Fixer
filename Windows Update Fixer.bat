@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.1.2
+echo Version: 1.1.3
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -191,8 +191,7 @@ goto "Restart"
 "%windir%\System32\net.exe" start wuauserv > nul 2>&1
 "%windir%\System32\net.exe" start cryptsvc > nul 2>&1
 "%windir%\System32\net.exe" start appidsvc > nul 2>&1
-echo There has been an error! Press any key to try again.
-pause > nul 2>&1
+echo There has been an error! You can try again.
 goto "sc"
 
 :"Restart"
