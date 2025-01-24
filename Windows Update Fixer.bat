@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.1.5
+echo Version: 1.1.6
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -103,7 +103,7 @@ if /i "%sc%"=="No" goto "Reregister"
 
 :"Reset"
 echo.
-echo Resseting the BITS service and the Windows Update service to the default security descriptor.
+echo Resetting the BITS service and the Windows Update service to the default security descriptor.
 "%windir%\System32\sc.exe" sdset bits D:(A;CI;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU) > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
 "%windir%\System32\sc.exe" sdset wuauserv D:(A;;CCLCSWRPLORC;;;AU)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY) > nul 2>&1
