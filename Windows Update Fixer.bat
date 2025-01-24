@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.1.4
+echo Version: 1.1.5
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -28,7 +28,7 @@ goto "Close"
 :"sc"
 echo.
 set sc=
-set /p sc="Reseting the BITS service and the Windows Update service to the default security descriptor will overwrite your existing security ACLs on the BITS and Windows Update service and set them to default. Do you want to do this? (Yes/No) "
+set /p sc="Resetting the BITS service and the Windows Update service to the default security descriptor will overwrite your existing security ACLs on the BITS and Windows Update service and set them to default. Do you want to do this? (Yes/No) "
 if /i "%sc%"=="Yes" goto "Suresc"
 if /i "%sc%"=="No" goto "Windows"
 echo Invalid syntax!
@@ -86,12 +86,12 @@ goto "Sure3"
 
 :"StopWindowsUpdateServices"
 echo.
-echo Stoping Windows Update services.
+echo Stopping Windows Update services.
 "%windir%\System32\net.exe" stop bits /y > nul 2>&1
 "%windir%\System32\net.exe" stop wuauserv /y > nul 2>&1
 "%windir%\System32\net.exe" stop cryptsvc /y > nul 2>&1
 "%windir%\System32\net.exe" stop appidsvc /y > nul 2>&1
-echo Windows Update services stoped.
+echo Windows Update services stopped.
 echo.
 echo Deleting Windows Update files.
 rd "%ALLUSERSPROFILE%\Microsoft\Network\Downloader" /s /q > nul 2>&1
@@ -103,7 +103,7 @@ if /i "%sc%"=="No" goto "Reregister"
 
 :"Reset"
 echo.
-echo Reseting the BITS service and the Windows Update service to the default security descriptor.
+echo Resseting the BITS service and the Windows Update service to the default security descriptor.
 "%windir%\System32\sc.exe" sdset bits D:(A;CI;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU) > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
 "%windir%\System32\sc.exe" sdset wuauserv D:(A;;CCLCSWRPLORC;;;AU)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY) > nul 2>&1
@@ -113,7 +113,7 @@ goto "Reregister"
 
 :"Reregister"
 echo.
-echo Reregistering BITS files and Windows Update files.
+echo Re-registering BITS files and Windows Update files.
 "%windir%\System32\regsvr32.exe" /s "%windir%\System32\atl.dll" > nul 2>&1
 "%windir%\System32\regsvr32.exe" /s "%windir%\System32\urlmon.dll" > nul 2>&1
 "%windir%\System32\regsvr32.exe" /s "%windir%\System32\mshtml.dll" > nul 2>&1
@@ -150,9 +150,9 @@ echo Reregistering BITS files and Windows Update files.
 "%windir%\System32\regsvr32.exe" /s "%windir%\System32\wucltux.dll" > nul 2>&1
 "%windir%\System32\regsvr32.exe" /s "%windir%\System32\muweb.dll" > nul 2>&1
 "%windir%\System32\regsvr32.exe" /s "%windir%\System32\wuwebv.dll" > nul 2>&1
-echo BITS files and Windows Update files reregistered.
+echo BITS files and Windows Update files re-registered.
 echo.
-echo Reseting Winsock catalog.
+echo Resetting Winsock catalog.
 "%windir%\System32\netsh.exe" winsock reset > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
 echo Restart needed to finish Winsock catalog reset.
