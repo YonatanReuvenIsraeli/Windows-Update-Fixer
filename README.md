@@ -8,4 +8,4 @@ To fix Windows corruption see https://github.com/YonatanReuvenIsraeli/Windows-Co
 
 To fix Windows network issues see https://github.com/YonatanReuvenIsraeli/Windows-Network-Fixer.
 
-- This batch file can fix problems with "setup.exe" in the Windows installation media not loading.
+- This batch file can fix problems with "setup.exe" in the Windows Disk Image/Windows installation media not loading.
