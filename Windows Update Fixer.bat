@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.1.7
+echo Version: 1.2.0
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -11,7 +11,7 @@ echo Sponsor: https://github.com/sponsors/YonatanReuvenIsraeli
 if not "%errorlevel%"=="0" goto "NotAdministrator"
 "%windir%\System32\net.exe" user > nul 2>&1
 if not "%errorlevel%"=="0" goto "InWindowsPreinstallationEnvironmentWindowsRecoveryEnvironment"
-goto "sc"
+goto "Windows"
 
 :"NotAdministrator"
 echo.
@@ -25,24 +25,6 @@ echo You are in Windows Preinstallation Environment or Windows Recovery Environm
 pause > nul 2>&1
 goto "Close"
 
-:"sc"
-echo.
-set sc=
-set /p sc="Resetting the BITS service and the Windows Update service to the default security descriptor will overwrite your existing security ACLs on the BITS and Windows Update service and set them to default. Do you want to do this? (Yes/No) "
-if /i "%sc%"=="Yes" goto "Suresc"
-if /i "%sc%"=="No" goto "Windows"
-echo Invalid syntax!
-goto "sc"
-
-:"Suresc"
-echo.
-set Suresc=
-set /p Suresc="Are you sure you want to reset the BITS service and the Windows Update service to the default security descriptor? (Yes/No) "
-if /i "%Suresc%"=="Yes" goto "Windows"
-if /i "%Suresc%"=="No" goto "sc"
-echo Invalid syntax!
-goto "Suresc"
-
 :"Windows"
 echo.
 echo [1] Windows XP or Windows Server 2003.
@@ -51,38 +33,40 @@ echo [3] None of the above.
 echo.
 set Windows=
 set /p Windows="Which of the following Windows versions is this PC? (1-3) "
-if /i "%Windows%"=="1" goto "Sure1"
-if /i "%Windows%"=="2" goto "Sure2"
-if /i "%Windows%"=="3" goto "Sure3"
+if /i "%Windows%"=="1" goto "SureWindows"
+if /i "%Windows%"=="2" goto "SureWindows"
+if /i "%Windows%"=="3" goto "SureWindows"
 echo Invalid syntax!
 goto "Windows"
 
-:"Sure1"
+:"SureWindows"
 echo.
 set Sure=
-set /p Sure="Are you sure this PC is Windows XP or Windows Server 2003? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "StopWindowsUpdateServices"
+if /i "%Windows%"=="1" set /p Sure="Are you sure this PC is Windows XP or Windows Server 2003? (Yes/No) "
+if /i "%Windows%"=="2" set /p Sure="Are you sure this PC is Windows Vista or Windows Server 2008? (Yes/No) "
+if /i "%Windows%"=="3" set /p Sure="Are you sure this PC is none of the above? (Yes/No) "
+if /i "%Sure%"=="Yes" goto "sc"
 if /i "%Sure%"=="No" goto "Windows"
 echo Invalid syntax!
-goto "Sure1"
+goto "SureWindows"
 
-:"Sure2"
+:"sc"
 echo.
-set Sure=
-set /p Sure="Are you sure this PC is Windows Vista or Windows Server 2008? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "StopWindowsUpdateServices"
-if /i "%Sure%"=="No" goto "Windows"
+set sc=
+set /p sc="Resetting the BITS service and the Windows Update service to the default security descriptor will overwrite your existing security ACLs on the BITS and Windows Update service and set them to default. Do you want to do this? (Yes/No) "
+if /i "%sc%"=="Yes" goto "Suresc"
+if /i "%sc%"=="No" goto "StopWindowsUpdateServices"
 echo Invalid syntax!
-goto "Sure2"
+goto "sc"
 
-:"Sure3"
+:"Suresc"
 echo.
-set Sure=
-set /p Sure="Are you sure this PC is none of the above? (Yes/No) "
-if /i "%Sure%"=="Yes" goto "StopWindowsUpdateServices"
-if /i "%Sure%"=="No" goto "Windows"
+set Suresc=
+set /p Suresc="Are you sure you want to reset the BITS service and the Windows Update service to the default security descriptor? (Yes/No) "
+if /i "%Suresc%"=="Yes" goto "StopWindowsUpdateServices"
+if /i "%Suresc%"=="No" goto "sc"
 echo Invalid syntax!
-goto "Sure3"
+goto "Suresc"
 
 :"StopWindowsUpdateServices"
 echo.
@@ -90,13 +74,25 @@ echo Stopping Windows Update services.
 "%windir%\System32\net.exe" stop bits /y > nul 2>&1
 "%windir%\System32\net.exe" stop wuauserv /y > nul 2>&1
 "%windir%\System32\net.exe" stop cryptsvc /y > nul 2>&1
-"%windir%\System32\net.exe" stop appidsvc /y > nul 2>&1
 echo Windows Update services stopped.
+goto "qmgr"
+
+:"qmgr"
+echo.
+echo Deleting "qmgr*.dat" files.
+del "%ALLUSERSPROFILE%\Application Data\Microsoft\Network\Downloader\qmgr*.dat" > nul 2>&1
+echo "qmgr*.dat" files deleted.
+goto "WindowsUpdateFiles"
+
+:"WindowsUpdateFiles"
 echo.
 echo Deleting Windows Update files.
 rd "%ALLUSERSPROFILE%\Microsoft\Network\Downloader" /s /q > nul 2>&1
+if not "%errorlevel%"=="0" goto "Error"
 rd "%SystemRoot%\SoftwareDistribution" /s /q > nul 2>&1
+if not "%errorlevel%"=="0" goto "Error"
 rd "%SystemRoot%\System32\catroot2" /s /q > nul 2>&1
+if not "%errorlevel%"=="0" goto "Error"
 echo Windows Update files deleted.
 if /i "%sc%"=="Yes" goto "Reset"
 if /i "%sc%"=="No" goto "Reregister"
@@ -174,7 +170,6 @@ echo Starting Windows Update services.
 "%windir%\System32\net.exe" start bits > nul 2>&1
 "%windir%\System32\net.exe" start wuauserv > nul 2>&1
 "%windir%\System32\net.exe" start cryptsvc > nul 2>&1
-"%windir%\System32\net.exe" start appidsvc > nul 2>&1
 echo Windows Update services started.
 if /i "%Windows%"=="2" goto "BITS"
 goto "Restart"
@@ -191,9 +186,8 @@ goto "Restart"
 "%windir%\System32\net.exe" start bits > nul 2>&1
 "%windir%\System32\net.exe" start wuauserv > nul 2>&1
 "%windir%\System32\net.exe" start cryptsvc > nul 2>&1
-"%windir%\System32\net.exe" start appidsvc > nul 2>&1
 echo There has been an error! You can try again.
-goto "sc"
+goto "Windows"
 
 :"Restart"
 endlocal
