@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.1.6
+echo Version: 1.1.7
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -183,6 +183,7 @@ goto "Restart"
 echo.
 echo Clearing the BITS queue.
 "%windir%\System32\bitsadmin.exe" /reset /allusers
+if not "%errorlevel%"=="0" goto "Error"
 echo BITS queue cleared.
 goto "Restart"
 
