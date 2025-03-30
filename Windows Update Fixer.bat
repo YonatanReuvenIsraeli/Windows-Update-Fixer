@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.2.0
+echo Version: 1.2.1
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -192,7 +192,7 @@ goto "Windows"
 :"Restart"
 endlocal
 echo.
-echo Restart needed to finish fixing Windows Update. Press any key to restart this PC.
+echo Restart needed to finish fixing Windows Update. Please save everything you want before restarting this PC! Press any key to restart this PC.
 pause > nul 2>&1
-"%windir%\System32\shutdown.exe" /r /t 00
+"%windir%\System32\shutdown.exe" /r /t 0
 exit
