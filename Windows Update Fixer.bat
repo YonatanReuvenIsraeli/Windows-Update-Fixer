@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.2.1
+echo Version: 1.2.3
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -87,8 +87,6 @@ goto "WindowsUpdateFiles"
 :"WindowsUpdateFiles"
 echo.
 echo Deleting Windows Update files.
-rd "%ALLUSERSPROFILE%\Microsoft\Network\Downloader" /s /q > nul 2>&1
-if not "%errorlevel%"=="0" goto "Error"
 rd "%windir%\SoftwareDistribution" /s /q > nul 2>&1
 if not "%errorlevel%"=="0" goto "Error"
 rd "%windir%\System32\catroot2" /s /q > nul 2>&1
