@@ -2,7 +2,7 @@
 title Windows Update Fixer
 setlocal
 echo Program Name: Windows Update Fixer
-echo Version: 1.2.3
+echo Version: 1.2.4
 echo License: GNU General Public License v3.0
 echo Developer: @YonatanReuvenIsraeli
 echo GitHub: https://github.com/YonatanReuvenIsraeli
@@ -80,7 +80,7 @@ goto "qmgr"
 :"qmgr"
 echo.
 echo Deleting "qmgr*.dat" files.
-del "%ALLUSERSPROFILE%\Application Data\Microsoft\Network\Downloader\qmgr*.dat" > nul 2>&1
+del "%ALLUSERSPROFILE%\Application Data\Microsoft\Network\Downloader\qmgr*.dat" /f /q > nul 2>&1
 echo "qmgr*.dat" files deleted.
 goto "WindowsUpdateFiles"
 
