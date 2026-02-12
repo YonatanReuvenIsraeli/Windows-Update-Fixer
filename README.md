@@ -1,4 +1,4 @@
-# Windows Update Fixer v1.2.4
+# Windows Update Fixer v1.2.5
 Fixes Windows Update issues.
 
 ## Notes
